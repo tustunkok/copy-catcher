@@ -155,3 +155,4 @@ dmypy.json
 .vscode/
 *.zip
 secret_key.txt
+jplag_results/

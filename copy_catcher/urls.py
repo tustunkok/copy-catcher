@@ -21,4 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('captcha/', include('captcha.urls')),
     path('', views.main_page, name='home'),
+    path('details/', views.details_page, name='details'),
+    path('download/', views.download_page, name='download')
 ]

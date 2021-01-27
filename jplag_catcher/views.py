@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from jplag_catcher import forms
 from zipfile import ZipFile
@@ -22,12 +22,44 @@ def main_page(request):
 
     return render(request, 'jplag_catcher/index.html', {'form': form})
 
+def details_page(request):
+    download_url = reverse('download')
+    print(download_url)
+    with open(settings.BASE_DIR / 'jplag_results' / 'index.html', 'r') as jplag_index_html_f:
+        contents = jplag_index_html_f.readlines()
+    
+    contents.insert(5, f'<a href="{download_url}"><big><strong>Download Report</strong></big></a>\n')
+
+    with open(settings.BASE_DIR / 'jplag_results' / 'index.html', 'w') as jplag_index_html_f:
+        contents = "".join(contents)
+        jplag_index_html_f.write(contents)
+
+    with open(settings.BASE_DIR / 'jplag_results' / 'index.html', 'r') as jplag_index_html_f:
+        response = HttpResponse(jplag_index_html_f.read())
+    return response
+
+def download_page(request):
+    jplag_results_dir = settings.BASE_DIR / 'jplag_results'
+
+    shutil.make_archive(jplag_results_dir, 'zip', jplag_results_dir)
+
+    if os.path.isdir(jplag_results_dir):
+        shutil.rmtree(jplag_results_dir)
+
+    with open(os.path.join(settings.BASE_DIR, 'jplag_results.zip'), 'rb') as zip_file:
+        response = HttpResponse(zip_file, content_type='application/zip')
+        response['Content-Disposition'] = 'attachment; filename="jplag_results.zip"'
+    
+    return response
+
 def run_jplag(submission_data):
     output_dir = os.path.join(settings.MEDIA_ROOT, os.path.splitext(str(submission_data.submissions))[0])
-    jplag_results_dir = os.path.join(settings.BASE_DIR, 'jplag_results')
+    jplag_results_dir = settings.BASE_DIR / 'jplag_results'
 
-    if not os.path.exists(jplag_results_dir):
-        os.makedirs(jplag_results_dir)
+    if os.path.exists(jplag_results_dir):
+        shutil.rmtree(jplag_results_dir)
+
+    os.makedirs(jplag_results_dir)
 
     with ZipFile(os.path.join(settings.MEDIA_ROOT, str(submission_data.submissions)), 'r') as zipObj:
         zipObj.extractall(output_dir)
@@ -42,16 +74,8 @@ def run_jplag(submission_data):
     
     if os.path.isdir(output_dir):
         shutil.rmtree(output_dir)
-    
-    shutil.make_archive(os.path.join(settings.BASE_DIR, 'jplag_results'), 'zip', jplag_results_dir)
 
-    if os.path.isdir(jplag_results_dir):
-        shutil.rmtree(jplag_results_dir)
-
-    with open(os.path.join(settings.BASE_DIR, 'jplag_results.zip'), 'rb') as zip_file:
-        response = HttpResponse(zip_file, content_type='application/zip')
-        response['Content-Disposition'] = 'attachment; filename="jplag_results.zip"'
-        return response
+    return redirect('details')
 
 
 def get_client_ip(request):
