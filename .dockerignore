@@ -1,0 +1,7 @@
+*.zip
+.git/
+.gitignore
+secret_key.txt
+Dockerfile
+000*.py
+persist/
