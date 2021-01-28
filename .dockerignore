@@ -5,3 +5,4 @@ secret_key.txt
 Dockerfile
 000*.py
 persist/
+static/
