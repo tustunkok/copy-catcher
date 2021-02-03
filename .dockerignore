@@ -6,3 +6,4 @@ Dockerfile
 000*.py
 persist/
 static/
+.vscode/

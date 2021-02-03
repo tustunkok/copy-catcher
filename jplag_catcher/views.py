@@ -25,18 +25,24 @@ def main_page(request):
 def details_page(request):
     download_url = reverse('download')
     print(download_url)
-    with open(settings.BASE_DIR / 'jplag_results' / 'index.html', 'r') as jplag_index_html_f:
-        contents = jplag_index_html_f.readlines()
-    
-    contents.insert(5, f'<a href="{download_url}"><big><strong>Download Report</strong></big></a>\n')
 
-    with open(settings.BASE_DIR / 'jplag_results' / 'index.html', 'w') as jplag_index_html_f:
-        contents = "".join(contents)
-        jplag_index_html_f.write(contents)
+    if os.path.isfile(settings.BASE_DIR / 'jplag_results' / 'index.html'):
+        with open(settings.BASE_DIR / 'jplag_results' / 'index.html', 'r') as jplag_index_html_f:
+            contents = jplag_index_html_f.readlines()
+        
+        contents.insert(5, f'<a href="{download_url}"><big><strong>Download Report</strong></big></a>\n')
 
-    with open(settings.BASE_DIR / 'jplag_results' / 'index.html', 'r') as jplag_index_html_f:
-        response = HttpResponse(jplag_index_html_f.read())
-    return response
+        with open(settings.BASE_DIR / 'jplag_results' / 'index.html', 'w') as jplag_index_html_f:
+            contents = "".join(contents)
+            jplag_index_html_f.write(contents)
+
+        with open(settings.BASE_DIR / 'jplag_results' / 'index.html', 'r') as jplag_index_html_f:
+            response = HttpResponse(jplag_index_html_f.read())
+        return response
+    else:
+        with open(settings.BASE_DIR / 'jplag_results' / 'jplag-log.txt', 'r') as jplag_output_f:
+            response = HttpResponse("JPLAG ERROR\n" + 11 * "#" + "\n" + jplag_output_f.read(), content_type="text/plain")
+        return response
 
 def download_page(request):
     jplag_results_dir = settings.BASE_DIR / 'jplag_results'
