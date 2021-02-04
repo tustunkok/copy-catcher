@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+from django.contrib.messages import constants as messages
 from pathlib import Path
 import os
 
@@ -127,3 +128,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = '/static'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'submission_uploads')
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
+}

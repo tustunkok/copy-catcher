@@ -45,6 +45,13 @@
 
   <main class="px-3">
     <h1>Upload the submissions.</h1>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
     <form action="" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form|crispy }}
@@ -54,7 +61,7 @@
 
   <footer class="mt-auto text-white-50">
     <p>Template by <a href="https://twitter.com/mdo" class="text-white">@mdo</a>.</p>
-    <p>CopyCATher v0.1.1 <a class="text-white" href="https://github.com/tustunkok/copy-catcher" target="_blank"><i class="fab fa-github"></i> GitHub</a></p>
+    <p>CopyCATcher v0.2.0-beta <a class="text-white" href="https://github.com/tustunkok/copy-catcher" target="_blank"><i class="fab fa-github"></i> GitHub</a></p>
   </footer>
 </div>
   </body>

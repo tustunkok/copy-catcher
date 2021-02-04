@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
+from django.contrib import messages
 from jplag_catcher import forms
 from zipfile import ZipFile
 from copy_catcher import settings
@@ -17,6 +18,9 @@ def main_page(request):
             model.ip_address = get_client_ip(request)
             model.save()
             return run_jplag(model)
+        else:
+            for k, v in form.errors.items():
+                messages.error(request, f"Error in {k}: {v[0]}")
     else:
         form = forms.SubmissionForm()
 

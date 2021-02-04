@@ -8,5 +8,3 @@ class SubmissionForm(forms.ModelForm):
     class Meta:
         model = models.History
         fields = ['prog_language', 'submissions']
-
-    # captcha = ReCAPTCHA()
