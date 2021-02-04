@@ -7,3 +7,4 @@ Dockerfile
 persist/
 static/
 .vscode/
+submission_uploads/
