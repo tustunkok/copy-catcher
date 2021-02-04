@@ -26,4 +26,4 @@ With the last command, a uWSGI server is serving the application on port 8000. Y
 This project is under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details.
 
 ## Acknowledgements
-* Thanks to @burcia1711 for the name of the project.
+* Thanks to [@burcia1711](https://github.com/burcia1711) for the name of the project.
